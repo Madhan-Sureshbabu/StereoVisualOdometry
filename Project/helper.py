@@ -1,5 +1,3 @@
-#!/usr/bin/env python 
-
 import sys
 import cv2
 import numpy as np
@@ -53,7 +51,10 @@ def mini(dof,random_3d_1, random_3d_2, random_2d_1, random_2d_2,P):
     	error_2 = random_2d_2[i]-pred2d_2[i]
     	errorA[i,:] = error_1.reshape(1,3)[0]
     	errorB[i,:] = error_2.reshape(1,3)[0]
+    # print(errorA)
+    # print(errorB)
     residual = np.vstack((errorA,errorB))
+    # return errorB.flatten()
     return residual.flatten()
 
 # Function to find fast features in the image
@@ -156,6 +157,17 @@ def Calc_3DPts(DisparityA,PointsA,DisparityB,PointsB,\
             Pts_2DB.append(PtB)
     return np.asarray(Pts_2DA),np.asarray(Pts_2DB),\
            np.asarray(Pts_3DA),np.asarray(Pts_3DB)
+
+def convert_coordinate_system(Pts_1,Pts_2,shape):
+    Pts_1 = [[p[0],shape[0]-p[1]] for p in Pts_1]
+    Pts_2 = [[p[0],shape[0]-p[1]] for p in Pts_2]
+    print("shape ",shape)
+    Pts_1 = np.array(Pts_1)
+    Pts_2 = np.array(Pts_2)
+    # print(Pts_1)
+    # print(Pts_1.shape)
+    return Pts_1,Pts_2
+
 
 # Finding best points using Improved Inlier Detection
 def find_bestPts_ID(point_cloud1,point_cloud2,minReq) :
